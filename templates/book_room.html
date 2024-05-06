@@ -1,0 +1,161 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+	{% include "partials/header.html" %}
+	<body>
+		<div id="global-loader">
+			<div class="whirly-loader"></div>
+		</div>
+
+		<div class="main-wrapper">
+			{% include "partials/nav.html" %} 
+			{% if role == 'admin' %} 
+			{% include "partials/admin-sidebar.html" with is_active=active_page %}
+			{% endif %}
+
+			<div class="page-wrapper">
+				<div class="content">
+					<div class="page-header">
+						<div class="page-title">
+							<h4>Booking Management</h4>
+							<!-- <h6>Add Admin</h6> -->
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body">
+							<form class="row" id="book_room_form">
+								<div class="col-lg-4 col-sm-6 col-12">
+									<div class="form-group">
+										<label>Room Number</label>
+										<input
+											type="text"
+											value="{{room.room_number}}"
+											disabled
+										/>
+									</div>
+								</div>
+								<div class="col-lg-4 col-sm-6 col-12">
+									<div class="form-group">
+										<label>Room Type</label>
+										<input
+											type="text"
+											value="{{room.room_type}}"
+											disabled
+										/>
+									</div>
+								</div>
+								<div class="col-lg-4 col-sm-6 col-12">
+									<div class="form-group">
+										<label>Price / Night</label>
+										<input
+											type="text"
+											value="{{room.price_per_night}}"
+											disabled
+										/>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="form-group">
+										<label>Select Guest</label>
+										<select class="select" id="guest" name="guest_id">
+											<option value="">
+												Select Guest
+											</option>
+											{% for guest in guests %}
+											<option value="{{guest.id}}">
+												{{guest.name}}
+												({{guest.phone_number}})
+											</option>
+											{% endfor %}
+										</select>
+										<a
+											href="/guest/add/"
+											class="btn btn-primary btn-sm w-100"
+											>Add New Guest</a
+										>
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<button
+										type="submit"
+										class="btn btn-submit me-2"
+									>
+										Submit
+									</button>
+									<a href="/hotel/" class="btn btn-cancel"
+										>Cancel</a
+									>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+
+		<script src="{% static 'js/feather.min.js' %}"></script>
+
+		<script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+
+		<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+		<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+		<script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+
+		<script src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+		<script src="{% static 'plugins/sweetalert/sweetalerts.min.js' %}"></script>
+
+		<script src="{% static 'js/script.js' %}"></script>
+
+		<script>
+			$("#book_room_form").on("submit", async function (e) {
+				e.preventDefault();
+				let url = window.location.href;
+				let id = document.getElementById("guest").value
+				console.log(url, id);
+
+
+				await fetch(url, {
+					method: "PUT",
+					cache: "no-cache",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						"guest_id": id
+					}),
+					redirect: "follow",
+					referrerPolicy: "no-referrer",
+				})
+					.then(async (data) => {
+						return data.json();
+					})
+					.then(async (data) => {
+						if (data.type == "error") {
+							Swal.fire({
+								type: "error",
+								title: data.title,
+								text: data.message,
+								confirmButtonClass: "btn btn-success",
+							});
+						} else if (data.type == "success") {
+							Swal.fire({
+								type: "success",
+								title: data.title,
+								text: data.message,
+								confirmButtonClass: "btn btn-success",
+							}).then(() => {
+								console.log("ashish");
+								window.location.href = '/booking/';
+							});
+						}
+					});
+			});
+		</script>
+	</body>
+</html>

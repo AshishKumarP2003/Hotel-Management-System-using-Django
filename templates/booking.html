@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+	{% include "partials/header.html" %}
+	<body>
+		<div id="global-loader">
+			<div class="whirly-loader"></div>
+		</div>
+
+		<div class="main-wrapper">
+			{% include "partials/nav.html" %} 
+			{% if role == 'admin' %}
+			{% include "partials/admin-sidebar.html" with is_active=active_page %}
+			{% endif %}
+
+			<div class="page-wrapper print-container">
+				<div class="content">
+					<div class="page-header">
+						<div class="page-title">
+							<h4>Booking</h4>
+							<h6>Manage your Bookings</h6>
+						</div>
+						<div class="page-btn">
+							<a href="/book/ " class="btn btn-added">BOOK</a>
+						</div>
+					</div>
+
+					<div class="card">
+						<div class="card-body">
+							<div class="table-top">
+								<div class="search-set">
+									<div class="search-path">
+										<a
+											class="btn btn-filter"
+											id="filter_search"
+										>
+											<img
+												src="{% static 'img/icons/filter.svg' %}"
+												alt="img"
+											/>
+											<span
+												><img
+													src="{% static 'img/icons/closes.svg' %}"
+													alt="img"
+											/></span>
+										</a>
+									</div>
+									<div class="search-input">
+										<a class="btn btn-searchset"
+											><img
+												src="{% static 'img/icons/search-white.svg' %}"
+												alt="img"
+										/></a>
+									</div>
+								</div>
+								<div class="wordset">
+									<ul>
+										<li>
+											<a
+												data-bs-toggle="tooltip"
+												data-bs-placement="top"
+												title="pdf"
+												><img
+													src="{% static 'img/icons/pdf.svg' %}"
+													alt="img"
+											/></a>
+										</li>
+										<li>
+											<a
+												data-bs-toggle="tooltip"
+												data-bs-placement="top"
+												title="excel"
+												><img
+													src="{% static 'img/icons/excel.svg' %}"
+													alt="img"
+											/></a>
+										</li>
+										<li>
+											<a
+												data-bs-toggle="tooltip"
+												data-bs-placement="top"
+												title="print"
+												onclick="window.print();"
+												><img
+													src="{% static 'img/icons/printer.svg' %}"
+													alt="img"
+											/></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="card" id="filter_inputs">
+								<div class="card-body pb-0">
+									<div class="row">
+										<div class="col-lg-2 col-sm-6 col-12">
+											<div class="form-group">
+												<input
+													type="text"
+													placeholder="Enter Booking Code"
+												/>
+											</div>
+										</div>
+										<div class="col-lg-2 col-sm-6 col-12">
+											<div class="form-group">
+												<input
+													type="text"
+													placeholder="Enter Booking Name"
+												/>
+											</div>
+										</div>
+										<div class="col-lg-2 col-sm-6 col-12">
+											<div class="form-group">
+												<input
+													type="text"
+													placeholder="Enter Phone Number"
+												/>
+											</div>
+										</div>
+										<div class="col-lg-2 col-sm-6 col-12">
+											<div class="form-group">
+												<input
+													type="text"
+													placeholder="Enter Email"
+												/>
+											</div>
+										</div>
+										<div
+											class="col-lg-1 col-sm-6 col-12 ms-auto"
+										>
+											<div class="form-group">
+												<a
+													class="btn btn-filters ms-auto"
+													><img
+														src="{% static 'img/icons/search-whites.svg' %}"
+														alt="img"
+												/></a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="table-responsive">
+								<table class="table datanew">
+									<thead>
+										<tr>
+											<th>
+												<label class="checkboxs">
+													<input
+														type="checkbox"
+														id="select-all"
+													/>
+													<span
+														class="checkmarks"
+													></span>
+												</label>
+											</th>
+											<th>Room No.</th>
+											<th>Name</th>
+											<th>Check In</th>
+											<th>Check Out</th>
+											<th>Price/Night</th>
+											<th>Amount</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for booking in bookings %}
+										<tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox" />
+													<span
+														class="checkmarks"
+													></span>
+												</label>
+											</td>
+											<td>
+												{{booking.room_id.room_number}}
+											</td>
+											<td>{{booking.guest_id.name}}</td>
+											<td>{{booking.check_in_time}}</td>
+											<td>
+												{% if booking.check_out_time == None %} 
+												- 
+												{% endif %}
+												{% if booking.check_out_time != None %} 
+												{{booking.check_out_time}}
+												{% endif %}
+											</td>
+											<td>
+												{{booking.room_id.price_per_night}}
+											</td>
+											<td>{{booking.amount}}</td>
+											<td>
+												{% if booking.check_out_time == None %}
+												<a
+													class="me-3 btn btn-primary btn-sm text-white confirm-delete"
+													data-url="/booking/{{booking.id}}/check-out/"
+													href="javascript:void(0);"
+												>
+													Check Out
+												</a>
+												{% endif %} 
+												{% if booking.check_out_time != None %}
+												<div
+													class="btn btn-success btn-sm"
+													disabled
+												>
+													Done
+												</div>
+												{% endif %}
+
+												<!-- <a
+													class="me-3 confirm-delete"
+													data-url="/booking/{{booking.id}}/delete/"
+													href="javascript:void(0);"
+												>
+													<img
+														src="{% static 'img/icons/delete.svg' %}"
+														alt="img"
+													/>
+												</a> -->
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script
+			data-cfasync="false"
+			src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+		></script>
+		<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+
+		<script src="{% static 'js/feather.min.js' %}"></script>
+
+		<script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+
+		<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+		<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+		<script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+
+		<script src="{% static 'js/moment.min.js' %}"></script>
+		<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+
+		<script src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+		<script src="{% static 'plugins/sweetalert/sweetalerts.min.js' %}"></script>
+
+		<script src="{% static 'js/script.js' %}"></script>
+
+		<script>
+			$(".confirm-delete").on("click", function () {
+				let url = $(this).data("url");
+				console.log(url);
+				Swal.fire({
+					title: "Are you sure?",
+					text: "You won't be able to revert this!",
+					type: "warning",
+					showCancelButton: !0,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "#d33",
+					confirmButtonText: "Yes, delete it!",
+					confirmButtonClass: "btn btn-primary",
+					cancelButtonClass: "btn btn-danger ml-1",
+					buttonsStyling: !1,
+				}).then(async function (t) {
+					console.log(t.value);
+					if (t.value == true) {
+						await fetch(url, {
+							method: "POST",
+							cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+							credentials: "same-origin", // include, *same-origin, omit
+							headers: {
+								"Content-Type": "application/json",
+								// 'Content-Type': 'application/x-www-form-urlencoded',
+							},
+							redirect: "follow", // manual, *follow, error
+							referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+						})
+							.then(async (data) => {
+								return data.json();
+							})
+							.then(async (data) => {
+								Swal.fire({
+									type: "success",
+									title: "Deleted!",
+									text: "Your file has been deleted.",
+									confirmButtonClass: "btn btn-success",
+								}).then(() => {
+									console.log("ashish");
+									location.reload();
+								});
+							});
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

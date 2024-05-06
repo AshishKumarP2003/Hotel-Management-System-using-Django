@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+	{% include "partials/header.html" %}
+	<body>
+		<div id="global-loader">
+			<div class="whirly-loader"></div>
+		</div>
+
+		<div class="main-wrapper">
+			{% include "partials/nav.html" %}
+			{% if role == 'admin' %}
+			{% include "partials/admin-sidebar.html" with is_active=active_page %}
+			{% endif %}
+
+			<div class="page-wrapper">
+				<div class="content">
+					<div class="page-header">
+						<div class="page-title">
+							<h4>Book</h4>
+						</div>
+					</div>
+					<div class="row">
+
+						{% for room in rooms %}
+						<div class="col-6 col-xl-2 col-lg-3 col-sm-3 col-xs-4 d-flex">
+							<div class="card flex-fill {% if room.reserved == True %} text-white bg-danger{% endif %}{% if room.reserved == False %}bg-white {% endif %}">
+								<div class="card-header text-center" style="padding: 1rem 1rem 0 1rem">
+									<h5 class="card-title mb-0 {% if room.reserved == True %}text-white{% endif %}" style="font-size:x-large; ">{{room.room_number}}</h5>
+								</div>
+								<div class="card-body " style="padding: 0.5rem 1rem 1rem 1rem">
+									<p class="card-text text-center" style="margin-bottom: 0.7rem">Price/Night: <b>₹ {{room.price_per_night}}</b></p>
+									<a class="btn {% if room.reserved == True %} text-white btn-danger{% endif %}{% if room.reserved == False %}btn-success {% endif %} w-100 confirm-book" data-url="/room/{{room.id}}/book/" href="javascript:void(0);" data-reserved = {{room.reserved}} >{% if room.reserved == True %}Reserved{% endif %}{% if room.reserved == False %}Book{% endif %}</a>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+
+			<script
+				data-cfasync="false"
+				src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+			<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+
+			<script src="{% static 'js/feather.min.js' %}"></script>
+
+			<script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+
+			<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+			<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+
+			<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+			<script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+
+			<script src="{% static 'js/moment.min.js' %}"></script>
+			<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+
+			<script
+				src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+			<script src="{% static 'plugins/sweetalert/sweetalerts.min.js' %}"></script>
+
+			<script src="{% static 'js/script.js' %}"></script>
+
+			<script>
+			$(".confirm-book").on("click", async function () {
+				let url = $(this).data('url');
+				console.log(url);
+				await fetch(url, {
+							method: "POST",
+							cache: "no-cache",
+							credentials: "same-origin",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							redirect: "follow", 
+							referrerPolicy: "no-referrer",
+						})
+							.then(async (data) => {
+								return data.json();
+							})
+							.then(async (data) => {
+								if (data.type == "error") {
+									Swal.fire({
+										type: "error",
+										title: data.title,
+										text: data.message,
+										confirmButtonClass: "btn btn-success",
+									})
+								}
+								else if (data.type == "success") {
+									window.location.href = url
+								}
+								
+							});
+				
+			});
+		</script>
+		</body>
+	</html>
