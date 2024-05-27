@@ -1,18 +1,18 @@
-# Hotel Management System
+# Hotel Management System ( Django Framework )
 
 ## Overview
 
 The Hotel Management System is a comprehensive solution designed to streamline hotel operations, manage rooms and guests, and facilitate reservations. This system features two main roles: Super-Admin and Admin.
 
 - **Super-Admin**:
-
+  
   - Can add hotels to the system.
   - Can create Admin accounts for each hotel.
 - **Admin**:
-
+  
   - Can log in with credentials provided by the Super-Admin.
   - Can manage the hotel's menu, guests, and rooms.
-  - Has access to a booking panel to reserve rooms for guests.
+  - Has access to a booking panel to reserve rooms for guests and check-out.
 
 The project is hosted on [PythonAnywhere](http://raftar2003.pythonanywhere.com).
 
@@ -48,18 +48,54 @@ To run the project locally, follow these steps:
 ### Steps
 
 1. **Clone the Repository**
+   
    ```bash
    git clone https://github.com/yourusername/hotel-management-system.git
    cd hotel-management-system
    ```
-
-1. **Create a Virtual Environment**
+2. **Create a Virtual Environment**
+   
    ```bash
    python -m venv venv
    ```
+3. **Activate the Virtual Environment**
+   
+   - On Windows
+     
+     ```bash
+     venv/Scripts/activate
+     ```
+   - On Mac
+     
+     ```bash
+     source venv/bin/activate
+     ```
+4. **Install Required Packages**
+   
+   ```bash
+   pip install -r requirements
+   ```
+5. **Run the Server**
+   
+   ```bash
+   pip install -r requirements
+   ```
 
-1. **Activate the Virtual Environment**
-  - On Windows
-      ```bash
-      python -m venv venv
-      ```
+## Usage
+
+### Access the Application
+
+- Visit [http://raftar2003.pythonanywhere.com](http://raftar2003.pythonanywhere.com) to access the hosted version of the application.
+
+### Super-Admin Functions
+
+1. Log in with Super-Admin credentials.
+2. Add new hotels and create Admin accounts for each hotel.
+
+### Admin Functions
+
+1. Log in with Admin credentials provided by the Super-Admin.
+2. Manage the hotel’s menu, guests, and rooms.
+3. Use the booking panel to handle room reservations.
+   
+
