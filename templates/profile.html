@@ -8,63 +8,75 @@
 		</div>
 
 		<div class="main-wrapper">
-			{% include "partials/nav.html" %} 
-			{% if role == 'admin' %} 
+			{% include "partials/nav.html" %}
+			{% if role == 'admin' %}
 			{% include "partials/admin-sidebar.html" with is_active=active_page %}
+			{% endif %}
+			{% if role == 'super-admin' %}
+			{% include "partials/super-sidebar.html" with is_active=active_page %}
 			{% endif %}
 
 			<div class="page-wrapper">
 				<div class="content">
 					<div class="page-header">
 						<div class="page-title">
-							<h4>Room Management</h4>
-							<h6>Add/Update Room</h6>
+							<h4>Profile</h4>
 						</div>
 					</div>
-
 					<div class="card">
 						<div class="card-body">
 							<form class="row" action="#" method="POST">
-								<div class="col-lg-4 col-sm-6 col-12">
+								<div class="col-12 mb-4">
+										<h5>Personal Information</h5>
+								</div>
+								<div class="col-lg-6 col-sm-6 col-12">
 									<div class="form-group">
-										<label>Room Number</label>
-										<input type="text" name="room_number"  value="{{room.room_number}}"/>
+										<label>Name</label>
+										<input type="text" name="name" value="{{user.name}}" />
+									</div>
+								</div>  
+								<div class="col-lg-6 col-sm-6 col-12">
+									<div class="form-group">
+										<label>Email</label>
+										<input type="text" name="email" value="{{user.email}}" />
 									</div>
 								</div>
-								<div class="col-lg-4 col-sm-6 col-12">
+								{% if role == 'admin' %}
+								<hr class="mt-4" />
+								<div class="col-12 mb-4">
+									<h5>Hotel Information</h5>
+								</div>
+								<div class="col-lg-6 col-sm-6 col-12">
 									<div class="form-group">
-										<label>Room type</label>
-										<select class="select" name="room_type">
-											<option value="" {% if room.room_type == "" %} selected {% endif %}>
-												Select Hotel
-											</option>
-											<option value="Single" {% if room.room_type == "Single" %} selected {% endif %}>
-												Single
-											</option>
-											<option value="Double" {% if room.room_type == "Double" %} selected {% endif %}>
-												Double
-											</option>
-											<option value="Suite" {% if room.room_type == "Suite" %} selected {% endif %}>Suite</option>
-										</select>
+										<label>Hotel Name</label>
+										<input type="text" name="hotel_name" value="{{user.hotel.name}}" />
+									</div>
+								</div>  
+								<div class="col-lg-6 col-sm-6 col-12">
+									<div class="form-group">
+										<label>Phone Number</label>
+										<input type="text" name="phone_number" value="{{user.hotel.phone_number}}" />
 									</div>
 								</div>
-								<div class="col-lg-4 col-sm-6 col-12">
+								<div class="col-lg-12">
 									<div class="form-group">
-										<label>Price/Night</label>
-										<input
-											type="text"
-											name="price_per_night" value="{{room.price_per_night}}"
-										/>
+										<label>Address</label>
+										<textarea
+                                        name="address"
+											class="form-control"
+										>{{user.hotel.address}}</textarea>
 									</div>
 								</div>
+								{% endif %}
 								<div class="col-lg-12">
 									<button
 										type="submit"
 										class="btn btn-submit me-2"
+										>Submit</button
 									>
-										Submit
-									</button>
-									<a href="/room/" class="btn btn-cancel"
+									<a
+										href="/hotel/"
+										class="btn btn-cancel"
 										>Cancel</a
 									>
 								</div>

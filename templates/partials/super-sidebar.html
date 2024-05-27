@@ -242,7 +242,7 @@
                 <li class="submenu">
                     <a href="javascript:void(0);"
                         ><img
-                            src="{% static 'img/icons/hotel.svg' %}"
+                            src="{% static 'img/user-profile.png' %}"
                             alt="img" /><span> Admins</span>
                         <span class="menu-arrow"></span
                     ></a>
@@ -263,7 +263,22 @@
                         </li>
                     </ul>
                 </li>
-                    
+                <li {% if is_active == "profile" %} class = "active" {% endif %}>
+                    <a href="/profile"
+                        ><img
+                            src="{% static 'img/user_settings.png' %}"
+                            alt="img"
+                        /><span> Profile</span>
+                    </a>
+                </li>
+                <li {% if is_active == "logout" %} class = "active" {% endif %}>
+                    <a href="/logout"
+                        ><img
+                            src="{% static 'img/icons/log-out.svg' %}"
+                            alt="img"
+                        /><span> Logout</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

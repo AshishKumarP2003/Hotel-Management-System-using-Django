@@ -14,6 +14,7 @@ CUSTOM_MIDDLEWARES = {
 
 MIDDLEWARE_MAPPINGS = {
     'dashboard/': ['IsLoggedIn', 'IsValidAdminOrSuper'],
+    'profile/': ['IsLoggedIn', 'IsValidAdminOrSuper'],
     'hotel/': ['IsLoggedIn', 'IsValidSuper'],
     'hotel/add/': ['IsLoggedIn', 'IsValidSuper'],
     'admin/': ['IsLoggedIn', 'IsValidSuper'],

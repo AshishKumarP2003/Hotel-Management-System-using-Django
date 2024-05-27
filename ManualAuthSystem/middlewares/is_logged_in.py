@@ -2,6 +2,7 @@ from django.conf import settings
 from django.http import JsonResponse
 import jwt
 
+from Hotel.models import Hotel, HotelAdmin
 from User.models import User
 
 
@@ -23,10 +24,16 @@ class IsLoggedIn:
                 if payload['user_id'] == user_id:
                     # Check if user exists in database
                     user = User.objects.get(id=user_id).__dict__
+                    print(user['id'])
+                    if user['role'] == 'admin':
+                        hotel_id = HotelAdmin.objects.get(user_id=user['id']).__dict__['hotel_id_id']
+                        hotel = Hotel.objects.get(id=hotel_id).__dict__
+                        user['hotel'] = hotel
                     
                     del user['password']
                     del user['access_token']
                     print(user)
+
                     # # Update request with user object
                     request.user = user
                                         
@@ -37,7 +44,14 @@ class IsLoggedIn:
             except jwt.InvalidTokenError:
                 return JsonResponse({'status': 'error', 'message': 'Invalid token'}, status=401)
             except User.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'User not found'}, status=401)
+                print('user not found')
+                return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+            except HotelAdmin.DoesNotExist:
+                print('hotel admin not found')
+                return JsonResponse({'status': 'error', 'message': 'User Hotel not found'}, status=401)
+            except Hotel.DoesNotExist:
+                print('hotel not found')
+                return JsonResponse({'status': 'error', 'message': 'User Hotel not found'}, status=401)
         # If token doesn't exist or user not authenticated, return unauthorized
         return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=401)
 

@@ -4,20 +4,23 @@ from django.contrib import messages
 
 from Room.models import Room
 
-# Create your views here.
+# List of Room of a Hotel - View
 def getRoomView(request):
     rooms = Room.objects.filter(hotel_id = request.user['hotel'])
     return render(request, 'room.html', {'active_page': "room-list", 'rooms': rooms, 'role': request.user['role']})
 
+# Add New Room - View
 def getAddRoomView(request):
     if request.method == 'POST':
+        print("Posting")
         room_number = request.POST.get('room_number')
         room_type = request.POST.get('room_type')
         price_per_night = request.POST.get('price_per_night')
 
-        room = Room.objects.filter(room_number=room_number)
-
+        room = Room.objects.filter(room_number=room_number, hotel_id=request.user['hotel'])
+        print(room)
         if room.exists():
+            print("Already exists")
             messages.info(request, 'Room already exists')
             return render(request, 'room_add.html', {'active_page': "room-add", 'role': request.user['role']})
 
@@ -27,6 +30,20 @@ def getAddRoomView(request):
         return redirect("/room/")
     return render(request, 'room_add.html', {'active_page': "room-add", 'role': request.user['role']})
 
+# Update Room Info - View
+def getUpdateRoomView(request, id):
+    updating = Room.objects.get(id=id)
+    print(updating)
+    if (request.method == 'POST'):
+        updating.set_room_number(request.POST.get('room_number'))
+        updating.set_price_per_night(request.POST.get('price_per_night'))
+        updating.set_room_type(request.POST.get('room_type'))
+        updating.save()
+        messages.success(request, 'Room Added Successfully')
+        return redirect("/room/")
+    return render(request, 'room_update.html', {'active_page': "room-list", "room": updating, 'role': request.user['role']})
+
+# Delete Room - View
 def deleteRoom(request, id):
     print(id)
     try:
@@ -41,15 +58,3 @@ def deleteRoom(request, id):
     return JsonResponse({'type': 'error'}, status=404)
 
 
-def getUpdateRoomView(request, id):
-    
-    updating = Room.objects.get(id=id)
-    print(updating)
-    if (request.method == 'POST'):
-        updating.set_room_number(request.POST.get('room_number'))
-        updating.set_price_per_night(request.POST.get('price_per_night'))
-        updating.set_room_type(request.POST.get('room_type'))
-        updating.save()
-        messages.success(request, 'Room Added Successfully')
-        return redirect("/room/")
-    return render(request, 'room_update.html', {'active_page': "room-list", "room": updating, 'role': request.user['role']})

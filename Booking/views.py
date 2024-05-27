@@ -13,17 +13,20 @@ from Booking.models import Booking
 from Guest.models import Guest
 from Room.models import Room
 
-# Create your views here.
+# Booking List - View
 def getBookingView(request):
     booking = Booking.objects.filter(hotel_id = request.user['hotel'])
-    print(booking[0].room_id.room_number)
     return render(request, 'booking.html', {'active_page': "booking-list", 'bookings': booking, 'role': request.user['role']})
 
+# Get New Booking - View
 def getBookView(request):
     rooms = Room.objects.filter(hotel_id = request.user['hotel'])
     return render(request, 'book.html', {'active_page': "book", "rooms": rooms, 'role': request.user['role']})
 
+# Add New Booking Record - View
 def getNewBookingView(request, id):
+
+    # Check if the room is vacant or not.
     if request.method == 'POST':
         room = Room.objects.filter(id=id)
         if (room):
@@ -34,26 +37,30 @@ def getNewBookingView(request, id):
         else:
             return JsonResponse({"type": 'error', 'message': "The Room you are trying to book doesn't exists", "title": "Room not Found"}, status=404)
     
+    # Show the Booking Template with Room and guest list to select from.
     if request.method == 'GET':
         guests = Guest.objects.filter(hotel_id=request.user['hotel'])
         room = Room.objects.filter(id=id)
         return render(request, 'book_room.html', {'active_page': "book", 'room': room[0], 'guests': guests, 'role': request.user['role']})
     
+    # Handle New Booking
     if request.method == 'PUT':
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t\t\tPUT REQUEST DATA => ")
         guest_id = int(json.loads(request.body)['guest_id'])
         guest = Guest.objects.filter(id=guest_id)
         room = Room.objects.filter(id=id)
         if (room):
+            # Check if the room is reserved or not.
             if (room[0].reserved == False):
                 booking = Booking.objects.filter(room_id=id, check_out_time=None)
+                # Double Check: if Someone booked but room reserved status didn't change.
                 if (booking):
                     return JsonResponse({"type": 'error', 'message': "The Room you are trying to book is Occupied", "title": "Room is Occupied"}, status=409)
                 else:
-
+                    # Book the Room 
                     book = Booking.objects.create(room_id=room[0], guest_id=guest[0], hotel_id=request.user['hotel'], check_in_time=datetime.datetime.now())
                     if (book):
                         try:
+                            # Update the Room Status.
                             room_update = Room.objects.get(id=id)
                             room_update.reserved = True
                             room_update.save()
@@ -71,19 +78,21 @@ def getNewBookingView(request, id):
         else:
             return JsonResponse({"type": 'error', 'message': "The Room you are trying to book doesn't exists", "title": "Room not Found"}, status=404)
  
-        # guest = Guest.objects.filter(id=request.PUT['guest_id']
 
 
-
+# Check out from Hotel - View
 def checkOut(request, id):
     booking = Booking.objects.filter(id=id)
 
+    # Check if record exists and did he already checked out?
     if (booking == None):
         return JsonResponse({"type": 'error', 'message': "There is no such booking record found", "title": "Booking not Found"}, status=404)
     elif (booking[0].check_out_time != None):
         return JsonResponse({"type": 'error', 'message': "Guest has already checked out", "title": "Already Checked Out"}, status=404)
     else:
+        # If Not, Update the Booking Check out time, generate amount and vacant room.
         try:
+            # Updating the Amount and Checkout time.
             update = Booking.objects.get(id=id)
             print(booking[0].check_in_time)
             print(type(booking[0].check_in_time))
@@ -97,6 +106,7 @@ def checkOut(request, id):
             update.amount = round(amount, 2)
             update.save()
 
+            # Updating the Room Status to vacant.
             room = Room.objects.get(id=booking[0].room_id.id)
             room.reserved = False
             room.save()
@@ -112,47 +122,3 @@ def checkOut(request, id):
             # Handle other exceptions
             print(f"An error occurred: {e}")
             return JsonResponse({"type": 'error', 'message': "Something Went Wrong", "title": "Server Error"}, status=500)
-
-
-        
-
-        # if ()
-        
-
-        
-
-
-
-
-
-
-
-
-
-
-def deleteRoom(request, id):
-    print(id)
-    try:
-        deleting = Room.objects.get(id=id)
-        print(deleting)
-        if (deleting):
-            print('deleteing')
-            deleting.delete()
-            return JsonResponse({'type': 'success'}, status=200)
-    except Room.DoesNotExist:
-        return JsonResponse({'type': 'error'}, status=404)
-    return JsonResponse({'type': 'error'}, status=404)
-
-
-def getUpdateRoomView(request, id):
-    
-    updating = Room.objects.get(id=id)
-    print(updating)
-    if (request.method == 'POST'):
-        updating.set_room_number(request.POST.get('room_number'))
-        updating.set_price_per_night(request.POST.get('price_per_night'))
-        updating.set_room_type(request.POST.get('room_type'))
-        updating.save()
-        messages.success(request, 'Room Added Successfully')
-        return redirect("/room/")
-    return render(request, 'room_update.html', {'active_page': "room-list", "room": updating, 'role': request.user['role']})

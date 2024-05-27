@@ -13,6 +13,9 @@ class Dashboard(View):
         hotel = Hotel.objects.all()
         return render(request, 'hotel.html', {'hotels': hotel, 'active_page': "hotel-list", 'role': request.user['role']})
     
+
+# ================================= Hotel ===================================
+
 # View Hotels
 def getHotelView(request):
     return render(request, 'hotel.html', {'active_page': "hotel-list"})
@@ -63,6 +66,10 @@ def getAddHotelView(request):
         return redirect("/hotel/")
     return render(request, 'hotel_add.html', {'active_page': "hotel-add", 'role': request.user['role']})
 
+
+
+# ====================== Hotel Admin =============================
+
 # View Hotel Admins
 def getAdminView(request):
     try:
@@ -71,9 +78,6 @@ def getAdminView(request):
     except Exception as e:
         messages.info(request, 'Email already exists')
         return render(request, 'hotel_admin.html', {'active_page': "admin-list", 'role': request.user['role'], 'data': {}})
-
-
-    # return render(request, 'hotel_admin_add.html', {'active_page': "hotel-admin-add", 'role': request.user['role']})
 
 
 # Add Hotel Admin
@@ -113,6 +117,7 @@ def getAddAdminView(request):
 
 # Reset Password
 def getAdminResetPasswordView(request, user_id):
+
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm_pass = request.POST.get('confirm_password')
@@ -132,8 +137,7 @@ def getAdminResetPasswordView(request, user_id):
         messages.success(request, "Password updated successfully")
         print("success")
         return redirect("/admin/")
- 
-        
+
     try:
         user = User.objects.filter(id=user_id)
         print(user)
@@ -144,7 +148,6 @@ def getAdminResetPasswordView(request, user_id):
         return redirect("/admin/")
     return redirect("/admin/")
 
-    
 
 # Remove Hotel Admin
 def deleteHotelAdmin(request, id):

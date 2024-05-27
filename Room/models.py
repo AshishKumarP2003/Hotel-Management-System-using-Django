@@ -2,7 +2,7 @@ from django.db import models
 
 from Hotel.models import Hotel
 
-# Create your models here.
+# Room Model
 class Room(models.Model):
     room_number = models.CharField(max_length=255)
     room_type = models.CharField(max_length=255)
@@ -13,11 +13,14 @@ class Room(models.Model):
     class Meta:
         db_table = 'room'
 
+    # Set Room Number
     def set_room_number(self, room_number):
         self.room_number = room_number
     
+    # Set Room Type
     def set_room_type(self, room_type):
         self.room_type = room_type
     
+    # Set Price / Night
     def set_price_per_night(self, price_per_night):
         self.price_per_night = price_per_night

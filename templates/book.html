@@ -21,20 +21,28 @@
 						</div>
 					</div>
 					<div class="row">
-
-						{% for room in rooms %}
-						<div class="col-6 col-xl-2 col-lg-3 col-sm-3 col-xs-4 d-flex">
-							<div class="card flex-fill {% if room.reserved == True %} text-white bg-danger{% endif %}{% if room.reserved == False %}bg-white {% endif %}">
-								<div class="card-header text-center" style="padding: 1rem 1rem 0 1rem">
-									<h5 class="card-title mb-0 {% if room.reserved == True %}text-white{% endif %}" style="font-size:x-large; ">{{room.room_number}}</h5>
-								</div>
-								<div class="card-body " style="padding: 0.5rem 1rem 1rem 1rem">
-									<p class="card-text text-center" style="margin-bottom: 0.7rem">Price/Night: <b>₹ {{room.price_per_night}}</b></p>
-									<a class="btn {% if room.reserved == True %} text-white btn-danger{% endif %}{% if room.reserved == False %}btn-success {% endif %} w-100 confirm-book" data-url="/room/{{room.id}}/book/" href="javascript:void(0);" data-reserved = {{room.reserved}} >{% if room.reserved == True %}Reserved{% endif %}{% if room.reserved == False %}Book{% endif %}</a>
+						{% if rooms %}
+							<div class="mb-2">Select a Room</div>
+							{% for room in rooms %}
+							<div class="col-6 col-xl-2 col-lg-3 col-sm-3 col-xs-4 d-flex">
+								<div class="card flex-fill {% if room.reserved == True %} text-white bg-danger{% endif %}{% if room.reserved == False %}bg-white {% endif %}">
+									<div class="card-header text-center" style="padding: 1rem 1rem 0 1rem">
+										<h5 class="card-title mb-0 {% if room.reserved == True %}text-white{% endif %}" style="font-size:x-large; ">{{room.room_number}}</h5>
+									</div>
+									<div class="card-body " style="padding: 0.5rem 1rem 1rem 1rem">
+										<p class="card-text text-center" style="margin-bottom: 0.7rem">Price/Night: <b>₹ {{room.price_per_night}}</b></p>
+										<a class="btn {% if room.reserved == True %} text-white btn-danger{% endif %}{% if room.reserved == False %}btn-success {% endif %} w-100 confirm-book" data-url="/room/{{room.id}}/book/" href="javascript:void(0);" data-reserved = {{room.reserved}} >{% if room.reserved == True %}Reserved{% endif %}{% if room.reserved == False %}Book{% endif %}</a>
+									</div>
 								</div>
 							</div>
-						</div>
-						{% endfor %}
+							{% endfor %}
+						{% else %}
+							<div class="card flex-fill text-white bg-danger bg-white w-100">
+								<div class="card-header text-center" style="padding: 1rem 1rem 0 1rem">
+									<h5 class="card-title mb-2 text-secondary" style="font-size:large; ">Add Rooms in Hotel to start the Booking</h5>
+								</div>
+							</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>

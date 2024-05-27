@@ -11,8 +11,9 @@ class User(models.Model):
     class Meta:
         db_table = 'users'
     
+    # Set Name
     def set_name(self, name):
         self.name = name
-
+    # Set Password
     def set_password(self, password):
         self.password = password

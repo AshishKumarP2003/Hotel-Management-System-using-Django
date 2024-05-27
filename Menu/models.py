@@ -2,7 +2,7 @@ from django.db import models
 
 from Hotel.models import Hotel
 
-# Create your models here.
+# Menu Model
 class Menu(models.Model):
     name = models.CharField(max_length=255)
     price = models.CharField(max_length=255)
@@ -12,11 +12,14 @@ class Menu(models.Model):
     class Meta:
         db_table = 'menu'
 
+    # Set Name of Menu
     def set_name(self, name):
         self.name = name
     
+    # Set Price of Menu
     def set_price(self, price):
         self.price = price
     
+    # Set Description of Menu
     def set_description(self, description):
         self.description = description

@@ -26,41 +26,47 @@ from Booking import views as booking_views
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+
+    # User Basic Routes
     path('', user_views.login),
     path('logout/', user_views.logout),
+    # path('signup/', user_views.signup),
     path('dashboard/', user_views.index),
-    path('signup/', user_views.signup),
+    path('profile/', user_views.profile),
 
-
+    # Hotel Routes
     path('hotel/', hotel_views.Dashboard.as_view()),
     path('hotel/add/', hotel_views.getAddHotelView),
     path('hotel/<int:id>/edit/', hotel_views.getUpdateHotelView),
     path('hotel/<int:id>/delete/', hotel_views.deleteHotel),
+
+    # Hotel Admins Manage Routes
     path('admin/', hotel_views.getAdminView),
     path('admin/add/', hotel_views.getAddAdminView),
     path('admin/<int:user_id>/reset/', hotel_views.getAdminResetPasswordView),
     path('admin/<int:id>/delete/', hotel_views.deleteHotelAdmin),
 
-
+    # Manage Guests of a Hotel - Routes
     path('guest/', guest_views.getGuestView),
     path('guest/add/', guest_views.getAddGuestView),
     path('guest/<int:id>/delete/', guest_views.deleteGuest),
     path('guest/<int:id>/edit/', guest_views.getUpdateGuestView),
 
+    # Manage menus of a Hotel - Routes
     path('menu/', menu_views.getMenuView),
     path('menu/add/', menu_views.getAddMenuView),
     path('menu/<int:id>/delete/', menu_views.deleteMenu),
     path('menu/<int:id>/edit/', menu_views.getUpdateMenuView),
 
+    # Manage Rooms of a Hotel - Routes
     path('room/', room_views.getRoomView),
     path('room/add/', room_views.getAddRoomView),
     path('room/<int:id>/delete/', room_views.deleteRoom),
     path('room/<int:id>/edit/', room_views.getUpdateRoomView),
 
+    # Manage Bookings in a Hotel - Routes
     path('booking/', booking_views.getBookingView),
     path('book/', booking_views.getBookView),
     path('room/<int:id>/book/', booking_views.getNewBookingView),
     path('booking/<int:id>/check-out/', booking_views.checkOut),
-    # path('admin/<int:id>/delete', hotel_views.add_hotel_admin),
-    # path('hotel/<int:id>/admin/<int:user_id>/delete', views.add_hotel_admin),
 ]
