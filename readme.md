@@ -75,11 +75,30 @@ To run the project locally, follow these steps:
    ```bash
    pip install -r requirements
    ```
-5. **Run the Server**
+5. **Create .env File and Add Environment Variables**
+   
+   Create a `.env` file in the root directory of the project and add the following variables:
+   
+   ```plaintext
+   DB_HOST = localhost
+   DB_NAME = hms
+   DB_USER = root
+   DB_PASSWORD = ashishkumarp
+   DB_PORT = 3306
+   ```
+6. **Migrate the database**
    
    ```bash
-   python manage.py runserver   ```
+   python manage.py migrate
    ```
+7. **Run the Server**
+   
+   ```bash
+   python manage.py runserver
+   ```
+8. **Open it in browser**
+   
+   [http://localhost:8000/](http://localhost:8000/)
 
 ## Usage
 
@@ -87,14 +106,13 @@ To run the project locally, follow these steps:
 
 - Visit [http://raftar2003.pythonanywhere.com](http://raftar2003.pythonanywhere.com) to access the hosted version of the application.
 
-### Super-Admin Functions
+### Dummy Super-Admin Credentials
 
-1. Log in with Super-Admin credentials.
-2. Add new hotels and create Admin accounts for each hotel.
+Upon the first migration, a dummy Super-Admin account is generated with the following credentials:
 
-### Admin Functions
+- **Email**: `superadmin@gmail.com`
+- **Password**: `superadmin`
 
-1. Log in with Admin credentials provided by the Super-Admin.
-2. Manage the hotel’s menu, guests, and rooms.
-3. Use the booking panel to handle room reservations.
+Please log in with these credentials and change the password immediately for security reasons.
+Create the hotel and hotel admin to explore the application.
 

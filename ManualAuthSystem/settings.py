@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-# from ManualAuthSystem.middlewares.is_logged_in import IsLoggedIn
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-+3#+5*(tvnu+nx%26@cwuc=gy+^*bxz*g%37@w8+7spaw4lrl(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -85,11 +86,11 @@ WSGI_APPLICATION = 'ManualAuthSystem.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "hms",
-        "USER": "root",
-        "PASSWORD": "ashishkumarp",
-        "PORT": 3306,
-        "HOST": "localhost", 
+        "NAME": os.environ.get('DB_NAME'),
+        "USER":os.environ.get('DB_USER'),
+        "PASSWORD": os.environ.get('DB_PASSWORD'),
+        "PORT": os.environ.get('DB_PORT'),
+        "HOST": os.environ.get('DB_HOST'), 
     }
 }
 

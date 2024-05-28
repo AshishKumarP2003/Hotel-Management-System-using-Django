@@ -8,7 +8,7 @@ def load_initial_data(apps, schema_editor):
     # get_model(appname, modelname)
     user_model = apps.get_model('User', 'User')
     user_model.objects.create (
-        name = "Super Admin", email = "admin@gmail.com", password = make_password("admin"), role="super-admin"
+        name = "Super Admin", email = "superadmin@gmail.com", password = make_password("superadmin"), role="super-admin"
         )
 
 class Migration(migrations.Migration):
