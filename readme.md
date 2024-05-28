@@ -78,7 +78,7 @@ To run the project locally, follow these steps:
 5. **Run the Server**
    
    ```bash
-   pip install -r requirements
+   python manage.py runserver   ```
    ```
 
 ## Usage
@@ -97,5 +97,4 @@ To run the project locally, follow these steps:
 1. Log in with Admin credentials provided by the Super-Admin.
 2. Manage the hotel’s menu, guests, and rooms.
 3. Use the booking panel to handle room reservations.
-   
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 class User(models.Model):
@@ -16,4 +17,4 @@ class User(models.Model):
         self.name = name
     # Set Password
     def set_password(self, password):
-        self.password = password
+        self.password = make_password(password)

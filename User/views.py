@@ -30,7 +30,7 @@ def index(request):
 #             return redirect('/')
 
 #         new_user = User.objects.create(email=email)
-#         new_user.set_password(make_password(password))
+#         new_user.set_password(password)
 #         new_user.set_name(name)
 #         new_user.save()
 #         messages.success(request, 'Sign Up completed successfully')
@@ -46,7 +46,8 @@ def login(request):
             password = request.POST.get('password')
 
             user = User.objects.get(email=email)
-
+            print(email, password)
+            print(check_password(password, user.password))
             if check_password(password, user.password):
                 jwt_object = {
                     'user_id': user.id,
