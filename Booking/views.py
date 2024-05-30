@@ -15,7 +15,7 @@ from Room.models import Room
 
 # Booking List - View
 def getBookingView(request):
-    booking = Booking.objects.filter(hotel_id = request.user['hotel'])
+    booking = Booking.objects.filter(hotel_id = request.user['hotel']).order_by('-check_in_time')
     return render(request, 'booking.html', {'active_page': "booking-list", 'bookings': booking, 'role': request.user['role']})
 
 # Get New Booking - View
@@ -39,7 +39,7 @@ def getNewBookingView(request, id):
     
     # Show the Booking Template with Room and guest list to select from.
     if request.method == 'GET':
-        guests = Guest.objects.filter(hotel_id=request.user['hotel'])
+        guests = Guest.objects.filter(hotel_id=request.user['hotel']).order_by('name')
         room = Room.objects.filter(id=id)
         return render(request, 'book_room.html', {'active_page': "book", 'room': room[0], 'guests': guests, 'role': request.user['role']})
     

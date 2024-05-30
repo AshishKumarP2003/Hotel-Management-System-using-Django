@@ -1,6 +1,7 @@
 from django.db import models
 
 from Hotel.models import Hotel
+from django.db import connection
 
 # Guest Model
 class Guest(models.Model):

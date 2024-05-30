@@ -5742,15 +5742,20 @@ span.select2-container.select2-container--default.select2-container--open {
 	content: "";
 	width: 12px;
 	height: 12px;
-	background-color: #28c76f;
+	/* background-color: #28c76f; */
 	border-radius: 50px;
 	position: absolute;
 	top: 3px;
 	left: -20px;
 }
-.graph-sets > ul li:last-child span:after {
-	background-color: #ea5455;
+
+.bg-sky-blue:after {
+	background-color: #09CFE8;
 }
+.bg-green:after {
+	background-color: #28c76f;
+}
+
 .inbox-menu {
 	display: inline-block;
 	width: 100%;

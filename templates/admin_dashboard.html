@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+	{% include "partials/header.html" %}
+	<body>
+		<div id="global-loader">
+			<div class="whirly-loader"></div>
+		</div>
+
+		<div class="main-wrapper">
+			{% include "partials/nav.html" %}
+			{% if role == 'admin' %}
+			{% include "partials/admin-sidebar.html" with is_active='dashboard' %}
+			{% endif %}
+			{% if role == 'super-admin' %}
+			{% include "partials/super-sidebar.html" with is_active='dashboard' %}
+			{% endif %}
+			<div class="page-wrapper">
+				<div class="content">
+					<div class="row">
+						<div class="col-xl-3 col-lg-6 col-sm-6 col-12">
+							<div class="dash-widget">
+								<div class="dash-widgetimg">
+									<span
+										><img
+											src="{% static 'img/icons/dash1.svg' %}"
+											alt="img"
+									/></span>
+								</div>
+								<div class="dash-widgetcontent">
+									<h5>
+										<span
+											class="counters"
+											data-count="{{page_data.current_month_bookings}}"
+											>0</span
+										>
+									</h5>
+									<h6>Total Booking - {{page_data.month}}</h6>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-lg-6 col-sm-6 col-12">
+							<div class="dash-widget dash1">
+								<div class="dash-widgetimg">
+									<span
+										><img
+											src="{% static 'img/icons/dash2.svg' %}"
+											alt="img"
+									/></span>
+								</div>
+								<div class="dash-widgetcontent">
+									<h5>
+										₹ <span
+											class="counters"
+											data-count="{{page_data.current_month_revenue}}"
+											>0</span
+										>
+									</h5>
+									<h6>Total Revenue - {{page_data.month}}</h6>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-lg-6 col-sm-6 col-12">
+							<div class="dash-widget dash2">
+								<div class="dash-widgetimg">
+									<span
+										><img
+											src="{% static 'img/icons/dash3.svg' %}"
+											alt="img"
+									/></span>
+								</div>
+								<div class="dash-widgetcontent">
+									<h5>
+										<span
+											class="counters"
+											data-count="{{page_data.current_year_bookings}}"
+											>0</span
+										>
+									</h5>
+									<h6>Total Booking - {{page_data.year}}</h6>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-lg-6 col-sm-6 col-12">
+							<div class="dash-widget dash3">
+								<div class="dash-widgetimg">
+									<span
+										><img
+											src="{% static 'img/icons/dash4.svg' %}"
+											alt="img"
+									/></span>
+								</div>
+								<div class="dash-widgetcontent">
+									<h5>
+										₹ <span
+											class="counters"
+											data-count="{{page_data.current_year_revenue}}"
+											>0</span
+										>
+									</h5>
+									<h6>Total Revenue - {{page_data.year}}</h6>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-sm-6 col-12 d-flex">
+							<div class="dash-count">
+								<div class="dash-counts">
+									<h4>{{page_data.total_guest}}</h4>
+									<h5>Guests</h5>
+								</div>
+								<div class="dash-imgs">
+									<i data-feather="user"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-sm-6 col-12 d-flex">
+							<div class="dash-count das1">
+								<div class="dash-counts">
+									<h4>{{page_data.total_menu}}</h4>
+									<h5>Food Menu</h5>
+								</div>
+								<div class="dash-imgs">
+									<i data-feather="user-check"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-sm-6 col-12 d-flex">
+							<div class="dash-count das2">
+								<div class="dash-counts">
+									<h4>{{page_data.total_room}}</h4>
+									<h5>Rooms</h5>
+								</div>
+								<div class="dash-imgs">
+									<i data-feather="file-text"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-sm-6 col-12 d-flex">
+							<div class="dash-count das3">
+								<div class="dash-counts">
+									<h4>{{page_data.total_available_room}}</h4>
+									<h5>Available Rooms</h5>
+								</div>
+								<div class="dash-imgs">
+									<i data-feather="file"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xl-12 col-lg-12 col-sm-12 col-12 d-flex">
+							<div class="card flex-fill">
+								<div
+									class="card-header pb-0 d-flex justify-content-between align-items-center"
+								>
+									<h5 class="card-title mb-0">
+										Annual Bookings
+									</h5>
+									<div class="graph-sets">
+										<ul>
+											<li>
+												<span class="bg-sky-blue">Bookings</span>
+											</li>
+										</ul>
+										<div class="dropdown">
+											<button
+												class="btn btn-white btn-sm dropdown-toggle"
+												type="button"
+												id="dropdownMenuButton"
+												data-bs-toggle="dropdown"
+												aria-expanded="false"
+											>
+											<label id="booking_selected_year">{{page_data.year}}</label>
+												
+												<img
+													src="{% static 'img/icons/dropdown.svg' %}"
+													alt="img"
+													class="ms-2"
+												/>
+											</button>
+											<ul
+												class="dropdown-menu"
+												aria-labelledby="dropdownMenuButton"
+											>
+												{% for i in page_data.years %}
+													<li>
+														<a
+															href="javascript:void(0);"
+															class="dropdown-item"
+															onclick="handleChartsView('booking', '{{i}}')"
+															>{{i}}</a
+														>
+													</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="card-body">
+									<div id="booking_charts" data-booking="{{page_data.booking_data}}"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-12 col-lg-12 col-sm-12 col-12 d-flex">
+							<div class="card flex-fill">
+								<div
+									class="card-header pb-0 d-flex justify-content-between align-items-center"
+								>
+									<h5 class="card-title mb-0">
+										Annual Revenues
+									</h5>
+									<div class="graph-sets">
+										<ul>
+											<li>
+												<span class="bg-green">Revenues</span>
+											</li>
+										</ul>
+										<div class="dropdown">
+											<button
+												class="btn btn-white btn-sm dropdown-toggle"
+												type="button"
+												id="dropdownMenuButton"
+												data-bs-toggle="dropdown"
+												aria-expanded="false"
+											>
+											<label id="revenue_selected_year">{{page_data.year}}</label>
+												
+												<img
+													src="{% static 'img/icons/dropdown.svg' %}"
+													alt="img"
+													class="ms-2"
+												/>
+											</button>
+											<ul
+												class="dropdown-menu"
+												aria-labelledby="dropdownMenuButton"
+											>
+												{% for i in page_data.years %}
+													<li>
+														<a
+															href="javascript:void(0);"
+															class="dropdown-item"
+															onclick="handleChartsView('revenue', '{{i}}')"
+															>{{i}}</a
+														>
+													</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+								<!-- <div class="row"> -->
+
+									<div class="row card-body">
+										<div class="col-12 col-xxl-8 col-xl-8 col-md-7" id="revenue_charts" data-revenue="{{page_data.revenue_data}}"></div>
+										<div class="col-12 col-xxl-4 col-xl-4 col-md-5 d-flex just-content-center align-items-center" style="min-height: max-content;" id="annual_revenue_chart" data-annual="{{page_data.annual_revenue_data}}"></div>
+									</div>
+								<!-- </div> -->
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+		<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+
+		<script src="{% static 'js/feather.min.js' %}"></script>
+
+		<script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+
+		<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+		<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+		<script src="{% static 'plugins/apexchart/apexcharts.min.js' %}"></script>
+		<script src="{% static 'plugins/apexchart/chart-data.js' %}"></script>
+
+		<script src="{% static 'js/script.js' %}"></script>
+		<script src="{% static 'plugins/apexchart/admin-charts.js' %}"></script>
+		<script>
+			const bookingData = JSON.parse($('#booking_charts').data("booking").replace(/'/g, '"'));
+			const revenueData = JSON.parse($('#revenue_charts').data("revenue").replace(/'/g, '"'));
+			const annualData = JSON.parse($('#annual_revenue_chart').data("annual").replace(/'/g, '"'));
+			// Handle Change in year and change Chart
+			function handleChartsView(chart, year) {
+				if (chart == "booking") {
+					updateBookingChart(bookingData, Number(year));
+					$('#booking_selected_year').html(year)
+				} else if (chart == 'revenue') {
+					updateRevenueChart(revenueData, Number(year));
+					$('#revenue_selected_year').html(year)
+				}
+			}
+			$(document).ready(function() {
+				updateBookingChart(bookingData, Number('{{page_data.year}}'));
+				updateRevenueChart(revenueData, Number('{{page_data.year}}'));
+				updateAnnualRevenueChart(annualData);
+			})
+		</script>
+	</body>
+</html>

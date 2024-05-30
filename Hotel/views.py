@@ -26,7 +26,7 @@ def deleteHotel(request, id):
     deleting = Hotel.objects.get(id=id)
     print(deleting)
     if (deleting ):
-        print('deleeing')
+        print('deleting')
         deleting.delete()
         # deleting.save()
         return JsonResponse({'type': 'success'}, status=200)
