@@ -33,6 +33,7 @@ urlpatterns = [
     # path('signup/', user_views.signup),
     path('dashboard/', user_views.index),
     path('profile/', user_views.profile),
+    path('change_password/', user_views.change_password),
 
     # Hotel Routes
     path('hotel/', hotel_views.Dashboard.as_view()),

@@ -45,7 +45,7 @@ def getUpdateHotelView(request, id):
         # deleting.save()
         messages.success(request, 'Hotel Added Successfully')
         return redirect("/hotel/")
-    return render(request, 'hotel_update.html', {'active_page': "hotel-add", "hotel": updating})
+    return render(request, 'hotel_update.html', {'active_page': "hotel-list", "hotel": updating, 'role': request.user['role']})
 
 # Add Hotel
 def getAddHotelView(request):

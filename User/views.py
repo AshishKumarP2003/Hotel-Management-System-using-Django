@@ -8,6 +8,7 @@ from django.shortcuts import redirect, render
 from Booking.models import Booking
 from Hotel.models import Hotel
 from User.models import User
+from django.http import JsonResponse
 import jwt
 import json
 import calendar
@@ -67,23 +68,27 @@ def index(request):
             # Get the count of bookings for the current month
             booking_count_current_month = Booking.objects.filter(
                 check_in_time__month=current_month,
-                check_in_time__year=current_year
+                check_in_time__year=current_year,
+                hotel_id_id=request.user['hotel']['id']
             ).count()
 
             # Get the count of bookings for the current year
             booking_count_current_year = Booking.objects.filter(
-                check_in_time__year=current_year
+                check_in_time__year=current_year,
+                hotel_id_id=request.user['hotel']['id']
             ).count()
 
             # Get the total amount generated for bookings in the current month
             total_amount_current_month = Booking.objects.filter(
                 check_in_time__month=current_month,
-                check_in_time__year=current_year
+                check_in_time__year=current_year,
+                hotel_id_id=request.user['hotel']['id']
             ).aggregate(total_amount=Sum('amount'))['total_amount'] or 0
 
             # Get the total amount generated for bookings in the current year
             total_amount_current_year = Booking.objects.filter(
-                check_in_time__year=current_year
+                check_in_time__year=current_year,
+                hotel_id_id=request.user['hotel']['id']
             ).aggregate(total_amount=Sum('amount'))['total_amount'] or 0
         
             
@@ -91,15 +96,16 @@ def index(request):
             
             cursor = connection.cursor()
             print(" abcd " , str(request.user['hotel']['id']))
-            
+
             # Get the Total Guest, Menus, Rooms and Available Rooms in Hotel
-            if cursor.execute("""select guest, menu, room, available from (select hotel_id_id as hid, count(*) as guest from guest where hotel_id_id=""" + str(request.user['hotel']['id']) + """) as g inner join (select hotel_id_id as hid, count(*) as menu from menu where hotel_id_id=""" + str(request.user['hotel']['id']) + """) as m inner join (select hotel_id_id as hid, count(*) as room from room where hotel_id_id=""" + str(request.user['hotel']['id']) + """) as r inner join (select hotel_id_id as hid, count(*) as available from room where hotel_id_id=""" + str(request.user['hotel']['id']) + """ and reserved = 0) as a on g.hid = m.hid and m.hid = r.hid and r.hid = a.hid"""):
-                record = cursor.fetchone()
+            if cursor.execute("""SELECT "Guest" as name, COUNT(*) AS COUNT FROM guest where hotel_id_id=""" + str(request.user['hotel']['id']) + """ union SELECT "Available Room" as name, COUNT(*) AS COUNT FROM room where hotel_id_id=""" + str(request.user['hotel']['id']) + """ and reserved=0 union SELECT "Room" as name, COUNT(*) AS COUNT FROM room where hotel_id_id=""" + str(request.user['hotel']['id']) + """ union SELECT "Menu" as name, COUNT(*) AS COUNT FROM menu where hotel_id_id=""" + str(request.user['hotel']['id']) + """ """):
+                record = cursor.fetchall()
+                print("Records", record)
                 if (len(record) == 4):
-                    total_guest = record[0]
-                    total_menu = record[1]
-                    total_room = record[2]
-                    total_available_room = record[3]
+                    total_guest = record[0][1]
+                    total_menu = record[3][1]
+                    total_room = record[1][1]
+                    total_available_room = record[2][1]
             
             # Get the Month vs Booking chart data
             if cursor.execute("""SELECT YEAR(check_in_time), MONTH(check_in_time) AS month, COUNT(*) AS count FROM booking where hotel_id_id=""" + str(request.user['hotel']['id']) + """ GROUP BY YEAR(check_in_time), MONTH(check_in_time) ORDER BY YEAR(check_in_time), MONTH(check_in_time)"""):
@@ -236,6 +242,22 @@ def profile(request):
         )
     return redirect("/")
 
+
+def change_password(request):
+    if request.method == 'POST':
+        try:
+            user = User.objects.get(id=request.user['id'])
+            print(user)
+            body = json.loads(request.body)
+            if user and check_password(body['old_password'], user.password):
+                user.set_password(body['new_password'])
+                user.save()
+                return JsonResponse({'type': 'success', 'message': "Password Changed!"}, status=200)
+            else:
+                return JsonResponse({'type': 'error', 'message': "Incorrect Password!"}, status=401)
+
+        except User.DoesNotExist:
+            return JsonResponse({'type': 'error', 'message': "User Not Found!!!"}, status=500)
 
 # Logout View
 def logout(request):

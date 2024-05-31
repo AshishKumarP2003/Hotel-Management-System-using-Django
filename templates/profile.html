@@ -83,6 +83,45 @@
 							</form>
 						</div>
 					</div>
+					<div class="card">
+						<div class="card-body">
+							<form class="row" id="change_password_form" method="POST">
+								<div class="col-12 mb-4">
+										<h5>Change Password</h5>
+								</div>
+								<div class="col-lg-12 col-sm-12 col-12">
+									<div class="form-group">
+										<label>Old Password</label>
+										<input id="old_password" type="password" name="old_password" />
+									</div>
+								</div>  
+								<div class="col-lg-6 col-sm-6 col-12">
+									<div class="form-group">
+										<label>New Password</label>
+										<input id="new_password" type="password" name="new_password" />
+									</div>
+								</div>
+								<div class="col-lg-6 col-sm-6 col-12">
+									<div class="form-group">
+										<label>Confirm Password</label>
+										<input type="password" id = "confirm_password" name="confirm_password" />
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<button
+										type="submit"
+										class="btn btn-submit me-2"
+										>Submit</button
+									>
+									<a
+										href="/profile/"
+										class="btn btn-cancel"
+										>Cancel</a
+									>
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -104,5 +143,38 @@
 		<script src="{% static 'plugins/sweetalert/sweetalerts.min.js' %}"></script>
 
 		<script src="{% static 'js/script.js' %}"></script>
+		<script>
+			$(document).ready(function(){
+				$('#change_password_form').on('submit', (e) => {
+					e.preventDefault();
+					old_password = $('#old_password').val();
+					new_password = $('#new_password').val();
+					confirm_password = $('#confirm_password').val();
+					if (new_password != confirm_password) {
+						alert("Password doesn't match!")
+						return
+					}
+					$.ajax({
+						url: "/change_password/",
+						type: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify({
+							"old_password": old_password,
+							"new_password": new_password
+						}),
+						success: (data) => {
+							console.log(data)
+							console.log(data.responseJSON)
+							alert("Password Changed!")
+						},
+						error: (error) => {
+							console.log(error.responseJSON)
+							alert("Failed to update password!!!")
+						}
+					})
+					console.log(old_password, new_password, confirm_password)
+				})
+			})
+		</script>
 	</body>
 </html>

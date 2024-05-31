@@ -9,7 +9,7 @@
 
 		<div class="main-wrapper">
 			{% include "partials/nav.html" %}
-			{% if role == 'super-admin' %}
+			{% if role == "super-admin" %}
 			{% include "partials/super-sidebar.html" with is_active=active_page %}
 			{% endif %}
 
